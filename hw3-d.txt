@@ -2,4 +2,4 @@ Personally, I would recommend to a fellow student to use DBMS for tinkering/expe
 learning cloud-hosted database management was pretty useful, however it did have some flaws regarding performance and speed that left a lot to be desired.
 For example, running the queries took especially long and even being slown down by errors that you do not expect was frustrating.
 I would also recommend it to a future co-worker for a project so that it is easier to manage the data remotely by simply logging into
-the cloud service, as well as giving others access that you would be unable to give on your local machine.
+the cloud service, as well as giving others access that you would be unable to give on your local machine
