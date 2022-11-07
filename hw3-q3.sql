@@ -29,9 +29,9 @@ Atlantic City NJ	99.30875576
 
 */
 SELECT F2.origin_city AS origin_city, CAST((SELECT COUNT(*) AS number
-                                            FROM FLIGHTS AS F1
-                                            WHERE F1.actual_time < 180
-                                            AND F1.origin_city = F2.origin_city
-                                            GROUP BY F1.origin_city) AS FLOAT) * 100 / COUNT(*) AS percentage
+                                        FROM FLIGHTS AS F1
+                                        WHERE F1.actual_time < 180
+                                        AND F1.origin_city = F2.origin_city
+                                        GROUP BY F1.origin_city) AS FLOAT) * 100 / COUNT(*) AS percentage
 FROM FLIGHTS AS F2
 GROUP BY F2.origin_city;

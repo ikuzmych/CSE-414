@@ -29,11 +29,11 @@ Columbus GA
 */
 
 
-SELECT DISTINCT f2.origin_city AS city
-FROM FLIGHTS AS f2,
-(SELECT f.origin_city, MAX(actual_time) AS maximum
-	FROM FLIGHTS AS f GROUP BY f.origin_city) AS f1
-WHERE f2.origin_city = f1.origin_city
-AND f1.maximum = f2.actual_time
-AND f1.maximum < 180
+SELECT DISTINCT F2.origin_city AS city
+FROM FLIGHTS AS F2,
+(SELECT F.origin_city, MAX(actual_time) AS maximum
+	FROM FLIGHTS AS F GROUP BY F.origin_city) AS F1
+WHERE F2.origin_city = F1.origin_city
+AND F1.maximum = F2.actual_time
+AND F1.maximum < 180
 ORDER BY city ASC;

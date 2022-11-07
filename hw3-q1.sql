@@ -26,10 +26,10 @@ Aspen CO	Los Angeles CA	304
 Atlanta GA	Honolulu HI	649
 Atlantic City NJ	Fort Lauderdale FL	212
 */
-SELECT DISTINCT f2.origin_city, f2.dest_city, f2.actual_time AS time
-FROM FLIGHTS AS f2, 
-(SELECT f.origin_city, MAX(actual_time) AS maximum
-	FROM FLIGHTS AS f GROUP BY f.origin_city) AS f1
-WHERE f2.origin_city = f1.origin_city
-AND f1.maximum = f2.actual_time
-ORDER BY f2.origin_city, f2.dest_city ASC;
+SELECT DISTINCT F2.origin_city, F2.dest_city, F2.actual_time AS time
+FROM FLIGHTS AS F2, 
+(SELECT F.origin_city, MAX(actual_time) AS maximum
+	FROM FLIGHTS AS F GROUP BY F.origin_city) AS F1
+WHERE F2.origin_city = F1.origin_city
+AND F1.maximum = F2.actual_time
+ORDER BY F2.origin_city, F2.dest_city ASC;
