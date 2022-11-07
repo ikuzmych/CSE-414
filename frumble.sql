@@ -1,92 +1,110 @@
--- 4.1
-CREATE TABLE frumbleData (
-name VARCHAR(256),
-discount INT,
-month VARCHAR(15),
-price INT
-)
+/* Illya Kuzmych. HW4. CS 414. fall 2022 */
 
--- Part 2
--- name -> price
-SELECT * FROM frumbleData A, frumbleData B
-WHERE A.name = B.name and A.price != B.price
+/* 4.1 */
+CREATE TABLE FData (
+	name VARCHAR(256),
+	discount INT,
+	month VARCHAR(15),
+	price INT
+);
 
--- month -> discount
-SELECT * FROM frumbleData A, frumbleData B
-WHERE A.month = B.month and A.discount != B.discount
+/* 4.2
+name -> price */
+SELECT * FROM 
+FData AS F, FData AS F2
+WHERE ((F.name = F2.name) AND (F.price != F2.price));
+/* no output, as name depends on price */
 
--- name -> price and month -> discount implies
--- name, month -> price, discount
 
--- name, discount -> price, month
-SELECT * FROM frumbleData A, frumbleData B
-WHERE A.name = B.name and A.discount = B.discount
-and A.price != B.price and A.month != B.month
+/* month -> discount */
+SELECT * FROM FData AS F, FData AS F2
+WHERE ((F.month = F2.month) AND (F.discount != F2.discount));
+/* no output, as month depends on the discount */
 
--- month, price -> discount, name
-SELECT * FROM frumbleData A, frumbleData B
-WHERE A.month = B.month and A.price = B.price
-and A.discount != B.discount and A.name != B.name
+	/*
+	name -> price and month -> discount implies
+	name, month -> price, discount
 
--- FDs:
--- name -> price
--- month -> discount
--- name, month -> price, discount
--- name, discount -> price, month
--- month, price -> discount, name
+	name, discount -> price, month
+	*/
+SELECT * FROM 
+FData AS F, FData AS F2
+WHERE ((F.name = F2.name) AND (F.discount = F2.discount)
+		AND (F.price != F2.price) AND (F.month != F2.month));
 
--- Part 3
+/* month, price -> discount, name */
+SELECT * FROM 
+FData AS F, FData AS F2
+WHERE ((F.month = F2.month) AND (F.price = F2.price)
+		AND (F.discount != F2.discount) AND (F.name != F2.name));
 
---S(name,price,discount,month)
---{name}+ = {name,price} 
---{name}+ != {name}
---{name}+ != {name,price,discount,month}
+	/*
+	Functional dependencies:
+		name -> price
+		month -> discount
+		name, month -> price, discount
+		name, discount -> price, month
+		month, price -> discount, name
+	*/
 
---So S(name,price,discount,month) can be decomposed as S1(name,price) and S2(name,discount,month)
+/* 4.3 */
 
---For S2(name,discount,month)
---{month}+ = {month, discount}
---{month}+ != {month}
---{month}+ != {name,discount,month}
+	/*
+	S(name,price,discount,month)
+	{name}+ = {name,price} and {name}+ != {name}
+	{name}+ != {name,price,discount,month}
 
---So S2(name,discount,month) can be decomposed as S21(month,discount) and S22 (month, name)
+	S(name,price,discount,month) decomposes to S1(name,price) and S2(name,discount,month)
 
---So overall BCNF is S1(name,price), S21(month,discount) and S22 (month, name)
+	S2(name,discount,month)
+	{month}+ = {month, discount} and {month}+ != {month} and {month}+ != {name,discount,month}
 
-CREATE TABLE namePriceMapping (
-name varchar(256) PRIMARY KEY,
-price int
-)
+	S2(name,discount,month) decomposes to S21(month,discount) and S22 (month, name)
 
-CREATE TABLE monthDiscountMapping (
-discount int,
-month varchar(10)  PRIMARY KEY
-)
+	BCNF is S1(name,price), S21(month,discount), S22(month, name)
+	*/
 
-CREATE TABLE monthNameMapping (
-name varchar(256),
-month varchar(10),
-FOREIGN KEY(name) REFERENCES namePriceMapping(name),
-FOREIGN KEY(month) REFERENCES monthDiscountMapping(month)
-)
+CREATE TABLE NamePrice (
+	name VARCHAR(300) PRIMARY KEY,
+	price INT
+);
 
--- Part 4
-INSERT INTO namePriceMapping  
-SELECT DISTINCT name, Price FROM frumbleData
--- 36 rows
-SELECT COUNT(*)  FROM namePriceMapping
+CREATE TABLE MonthDiscount (
+	month VARCHAR(30)  PRIMARY KEY,
+	discount INT
+);
 
-INSERT INTO monthDiscountMapping 
-SELECT DISTINCT discount, month FROM frumbleData
--- 12 rows
-SELECT COUNT(*)  FROM monthDiscountMapping
+CREATE TABLE MonthName (
+	name VARCHAR(300),
+	month VARCHAR(30),
+	FOREIGN KEY(name) REFERENCES NamePrice(name),
+	FOREIGN KEY(month) REFERENCES MonthDiscount(month)
+);
 
-INSERT INTO monthNameMapping 
-SELECT DISTINCT name, month FROM frumbleData
--- 426 rows
-SELECT COUNT(*)  FROM monthNameMapping
+/* 4.4 */
+INSERT INTO NamePrice  
+SELECT DISTINCT name, price FROM
+FData;
 
--- 426 rows (lossless decomposition by BCNF)
-SELECT A.name, A.price, B.month, B.discount
-FROM namePriceMapping A, monthDiscountMapping B, monthNameMapping C
-WHERE A.name = C.name and B.month = C.month
+SELECT COUNT(*) FROM NamePrice; /* output: 36 rows */
+
+
+INSERT INTO MonthDiscount 
+SELECT DISTINCT month, discount FROM
+FData;
+
+SELECT COUNT(*) FROM MonthDiscount; /* output: 12 rows */
+
+
+INSERT INTO MonthName 
+SELECT DISTINCT name, month FROM
+FData;
+
+SELECT COUNT(*) FROM MonthName; /* output: 426 rows */
+
+
+
+SELECT F.name, F.price, F2.month, F2.discount FROM
+NamePrice AS F, MonthDiscount AS F2, MonthName AS F3
+WHERE F.name = F3.name and F2.month = F3.month;
+/* output: 426. got everything*/
