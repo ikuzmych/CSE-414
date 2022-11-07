@@ -1,0 +1,69 @@
+a.
+Schema: R(A, B, C, D, E)
+Functional dependencies: D->B, CE->A
+
+Iter. 1
+For set {C, E}
+{C, E}+ = {C, E, A}
+{C, E}+ does not equal {C, E} and {C, E}+ does not equal {A, B, C, D, E}
+R(A, B, C, D, E) decomposes to R1(C, E, A) and R2(C, E, B, D)
+
+
+Iter. 2
+For set {D} in R2(C, E, B, D)
+{D}+ = {D, B}
+{D}+ does not equal {D} and {D}+ does not equal {C, E, B, D}
+So R2(C, E, B, D) decomposes into R21(D, B) and R2(D, C, E)
+
+
+Iter. 3
+R(A, B, C, D, E) decomposes to R1(C, E, A), R2(C, E, B, D), R21(D, B)
+No X such that X does not equal X+ and X does not equal all attributes. This is BCNF
+
+
+b.
+Schema: S(A, B, C, D, E)
+Functional dependencies: A->E, BC->A, DE->B
+
+Iter. 1
+Set {B, C}
+{B, C}+ = {B, C, A, E}
+{B, C}+ does not equal {B, C} and {B, C}+ does not equal to {A, B, C, D, E}
+S(A, B, C, D, E) decomposes to S1(B, C, A, E) and S2(B, C, D)
+
+Iter. 2
+Set {A} in S1(B, C, A, E).
+{A}+ = {A, E}
+{A}+ does not equal {A} and {A}+ != {B, C, A, E}
+S1(B, C, A, E) decomposes into S11(A, E) and S12(A, B, C)
+
+Iter. 3
+S(A, B, C, D, E) decomposes into S11(A, E), S12(A, B, C) and S2(B, C, D)
+No X such that X does not equal X+ and X does not equal all attributes. This is BCNF
+
+
+
+c. All subsets are closed
+
+Lets assume there is a functional dependency A->B. If it exists, {A}+ = {A, B} != {A}.
+The presence of any functional dependency that Functional dependancy on the left hand side will not be closed.
+To have all sets of attr. be closed, must be zero functional dependencies
+
+d. Assume these functional dependencies
+A->B
+B->C
+C->D
+D->A
+
+If one of the attributes is on the left hand side of the functional dependancy, then all attributes
+will be on the right in X+. So for this, the only closed attributes will be {} and {A, B, C, D}. Required
+functional dependencies for this case:
+A->B
+B->C
+C->D
+D->A
+
+e.
+{B}+ is not {B}, and since {B, C}+ = {B, C}, B->C is a functional dependancy. With a similar argument, we have
+that B -> C is also a functional dependancy.  
+possible answer: {A -> BCD, D -> ABC, B->C, C->B}
