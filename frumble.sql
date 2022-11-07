@@ -1,9 +1,9 @@
--- Part 1
+-- 4.1
 CREATE TABLE frumbleData (
-name varchar(256),
-discount int,
-month varchar(15),
-price int
+name VARCHAR(256),
+discount INT,
+month VARCHAR(15),
+price INT
 )
 
 -- Part 2
